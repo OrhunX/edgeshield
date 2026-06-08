@@ -1,0 +1,9 @@
+venv/
+data/
+logs/
+*.tar.gz
+quickwit*/
+influxdata/
+qwdata/
+__pycache__/
+*.pyc
