@@ -23,5 +23,15 @@ def alerts():
 def health():
     return jsonify({"status": "ok"})
 
+@app.route("/stats")
+def stats():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    total = c.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+    alerts = c.execute("SELECT COUNT(*) FROM telemetry WHERE alert_level != 'info'").fetchone()[0]
+    devices = c.execute("SELECT COUNT(DISTINCT device_id) FROM telemetry").fetchone()[0]
+    conn.close()
+    return jsonify({"total_records": total, "total_alerts": alerts, "active_devices": devices})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

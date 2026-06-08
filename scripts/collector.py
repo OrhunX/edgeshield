@@ -24,10 +24,17 @@ def init_db():
     conn.commit()
     conn.close()
 
+def get_last_fcnt(device_id):
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    row = c.execute("SELECT MAX(fcnt) FROM telemetry WHERE device_id=? AND alert_type=''", (device_id,)).fetchone()
+    conn.close()
+    return row[0] if row[0] is not None else -1
+
 def insert_db(data):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute('''INSERT INTO telemetry 
+    c.execute('''INSERT INTO telemetry
         (ts, device_id, sensor_type, value, unit, rssi, fcnt, alert_level, alert_type)
         VALUES (?,?,?,?,?,?,?,?,?)''', (
         data.get("ts"), data.get("device_id"), data.get("sensor_type"),
@@ -36,8 +43,6 @@ def insert_db(data):
     ))
     conn.commit()
     conn.close()
-
-last_fcnt = {}
 
 def log(msg):
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -54,13 +59,6 @@ def verify_hmac(payload_dict):
     expected = hmac.new(HMAC_KEY, body, hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, received_mac)
 
-def check_replay(device_id, fcnt):
-    last = last_fcnt.get(device_id, -1)
-    if fcnt <= last:
-        return True
-    last_fcnt[device_id] = fcnt
-    return False
-
 def on_message(client, userdata, msg):
     try:
         raw = json.loads(msg.payload.decode())
@@ -69,15 +67,17 @@ def on_message(client, userdata, msg):
 
         payload_copy = raw.copy()
         if not verify_hmac(payload_copy):
-            log(f"[INTEGRITY_FAIL] device={device_id}")
+            log(f"[INTEGRITY_FAIL] device={device_id} topic={msg.topic}")
             insert_db({"ts": int(time.time()), "device_id": device_id,
-                       "alert_level": "critical", "alert_type": "INTEGRITY_FAIL"})
+                      "alert_level": "critical", "alert_type": "INTEGRITY_FAIL"})
             return
 
-        if check_replay(device_id, fcnt):
-            log(f"[REPLAY_DETECTED] device={device_id} fcnt={fcnt}")
+        last = get_last_fcnt(device_id)
+        if fcnt <= last:
+            log(f"[REPLAY_DETECTED] device={device_id} fcnt={fcnt} last_known={last}")
             insert_db({"ts": int(time.time()), "device_id": device_id,
-                       "alert_level": "critical", "alert_type": "REPLAY_DETECTED", "fcnt": fcnt})
+                      "alert_level": "critical", "alert_type": "REPLAY_DETECTED",
+                      "fcnt": fcnt})
             return
 
         value = raw.get("value", 0)

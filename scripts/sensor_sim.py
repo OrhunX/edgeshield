@@ -1,11 +1,12 @@
 import paho.mqtt.client as mqtt
-import json, time, random, hmac, hashlib, os
+import json, time, random, hmac, hashlib, sqlite3
 
 BROKER = "localhost"
 PORT = 1883
 USER = "edgeshield"
 PASS = "123"
 HMAC_KEY = b"edgeshield-secret-key-2026"
+DB_FILE = "/home/orhunx/edgeshield/data/edgeshield.db"
 
 DEVICES = [
     {"id": "sensor-01", "type": "temperature", "unit": "degC", "mean": 22.5, "std": 1.2},
@@ -13,7 +14,17 @@ DEVICES = [
     {"id": "sensor-03", "type": "pressure",    "unit": "hPa",  "mean": 1013.0, "std": 2.0},
 ]
 
-fcnt = {d["id"]: 0 for d in DEVICES}
+def get_start_fcnt(device_id):
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        row = conn.execute("SELECT MAX(fcnt) FROM telemetry WHERE device_id=? AND alert_type=''", (device_id,)).fetchone()
+        conn.close()
+        return (row[0] or 0) + 1
+    except:
+        return 1
+
+fcnt = {d["id"]: get_start_fcnt(d["id"]) for d in DEVICES}
+print(f"[*] Starting fcnt: {fcnt}")
 
 def make_payload(device):
     fcnt[device["id"]] += 1
@@ -34,8 +45,6 @@ def make_payload(device):
 def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         print("[*] MQTT connected")
-    else:
-        print(f"[!] Connection failed: {rc}")
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.username_pw_set(USER, PASS)
@@ -44,15 +53,13 @@ client.connect(BROKER, PORT, 60)
 client.loop_start()
 
 print("[*] EdgeShield Sensor Simulator started")
-print("[*] Sending telemetry every 5 seconds...")
-
 try:
     while True:
         for device in DEVICES:
             payload = make_payload(device)
             topic = f"iot/gateway/{payload['device_id']}/telemetry"
             client.publish(topic, json.dumps(payload))
-            print(f"[+] {topic} -> value={payload['value']} rssi={payload['rssi']} fcnt={payload['fcnt']}")
+            print(f"[+] {topic} -> value={payload['value']} fcnt={payload['fcnt']}")
         time.sleep(5)
 except KeyboardInterrupt:
     print("\n[*] Simulator stopped")
