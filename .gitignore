@@ -7,3 +7,7 @@ influxdata/
 qwdata/
 __pycache__/
 *.pyc
+*.key
+*.csr
+*.srl
+influxdata-archive_compat.key
