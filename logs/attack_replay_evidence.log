@@ -1,0 +1,9 @@
+[*] REPLAY ATTACK SIMULATION
+[*] Sending legitimate packet with fcnt=100...
+[*] Replaying same packet (fcnt=100) 5 times...
+[!] Replay attempt 1 sent (fcnt=100)
+[!] Replay attempt 2 sent (fcnt=100)
+[!] Replay attempt 3 sent (fcnt=100)
+[!] Replay attempt 4 sent (fcnt=100)
+[!] Replay attempt 5 sent (fcnt=100)
+[*] Done. Check logs for REPLAY_DETECTED alerts.

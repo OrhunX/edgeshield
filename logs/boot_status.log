@@ -1,0 +1,98 @@
+● mosquitto.service - Mosquitto MQTT Broker
+     Loaded: loaded (/usr/lib/systemd/system/mosquitto.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:40 +03; 2min 19s ago
+ Invocation: bab2010d86284bb89f809b563ab52c97
+       Docs: man:mosquitto.conf(5)
+             man:mosquitto(8)
+    Process: 1489 ExecStartPre=/bin/mkdir -m 740 -p /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 1493 ExecStartPre=/bin/chown mosquitto:mosquitto /var/log/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 1496 ExecStartPre=/bin/mkdir -m 740 -p /run/mosquitto (code=exited, status=0/SUCCESS)
+    Process: 1498 ExecStartPre=/bin/chown mosquitto:mosquitto /run/mosquitto (code=exited, status=0/SUCCESS)
+   Main PID: 1500 (mosquitto)
+      Tasks: 1 (limit: 9621)
+        CPU: 85ms
+     CGroup: /system.slice/mosquitto.service
+             └─1500 /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+
+Haz 09 23:44:39 edgeshield systemd[1]: Starting mosquitto.service - Mosquitto MQTT Broker...
+Haz 09 23:44:39 edgeshield mosquitto[1500]: 1781037879: Loading config file /etc/mosquitto/conf.d/edgeshield.conf
+Haz 09 23:44:40 edgeshield systemd[1]: Started mosquitto.service - Mosquitto MQTT Broker.
+
+● grafana-server.service - Grafana instance
+     Loaded: loaded (/usr/lib/systemd/system/grafana-server.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:39 +03; 2min 19s ago
+ Invocation: 61772968bec9473582e540b72351d2c7
+       Docs: http://docs.grafana.org
+   Main PID: 1487 (grafana)
+      Tasks: 38 (limit: 9621)
+        CPU: 4.759s
+     CGroup: /system.slice/grafana-server.service
+             ├─1487 /usr/share/grafana/bin/grafana server --config=/etc/grafana/grafana.ini --pidfile=/run/grafana/grafana-server.pid --packaging=deb cfg:default.paths.logs=/var/log/grafana cfg:default.paths.data=/var/lib/grafana cfg:default.paths.plugins=/var/lib/grafana/plugins cfg:default.paths.provisioning=/etc/grafana/provisioning
+             ├─1967 /var/lib/grafana/plugins/yesoreyeram-infinity-datasource/gpx_infinity_linux_arm64
+             └─1992 /usr/share/grafana/data/plugins-bundled/elasticsearch/gpx_grafana_elasticsearch_datasource_linux_arm64
+
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=folder.grafana.app resource=folders size=0 reason=getStats t=2026-06-09T23:46:10.471493486+03:00 level=info msg="Building index using memory"
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=folder.grafana.app resource=folders size=0 reason=getStats t=2026-06-09T23:46:10.47221258+03:00 level=info msg="Finished building index" elapsed=650.321µs listRV=1781002619767999
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=folder.grafana.app resource=folders size=0 reason=getStats t=2026-06-09T23:46:10.472273448+03:00 level=info msg="Storing index in cache" key="{Namespace:default Group:folder.grafana.app Resource:folders}" expiration=2026-06-09T23:56:10.472271263+03:00
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-06-09T23:46:10.473604957+03:00 level=info msg="Building index using memory"
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-06-09T23:46:10.474202742+03:00 level=info msg="Finished building index" elapsed=551.992µs listRV=1
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=provisioning.grafana.app resource=repositories size=0 reason=getStats t=2026-06-09T23:46:10.474239833+03:00 level=info msg="Storing index in cache" key="{Namespace:default Group:provisioning.grafana.app Resource:repositories}" expiration=2026-06-09T23:56:10.474238204+03:00
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=playlist.grafana.app resource=playlists size=0 reason=getStats t=2026-06-09T23:46:10.475250228+03:00 level=info msg="Building index using memory"
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=playlist.grafana.app resource=playlists size=0 reason=getStats t=2026-06-09T23:46:10.475771499+03:00 level=info msg="Finished building index" elapsed=492.883µs listRV=1
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=bleve-backend namespace=default group=playlist.grafana.app resource=playlists size=0 reason=getStats t=2026-06-09T23:46:10.47579909+03:00 level=info msg="Storing index in cache" key="{Namespace:default Group:playlist.grafana.app Resource:playlists}" expiration=2026-06-09T23:56:10.475797646+03:00
+Haz 09 23:46:10 edgeshield grafana[1487]: logger=infra.usagestats t=2026-06-09T23:46:10.476159017+03:00 level=info msg="Usage stats are ready to report"
+
+● edgeshield-collector.service - EdgeShield MQTT Collector
+     Loaded: loaded (/etc/systemd/system/edgeshield-collector.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:40 +03; 2min 19s ago
+ Invocation: 916bc7b2b6f34aafac02a4732cbefc8f
+   Main PID: 1507 (python3)
+      Tasks: 1 (limit: 9621)
+        CPU: 580ms
+     CGroup: /system.slice/edgeshield-collector.service
+             └─1507 /home/orhunx/edgeshield/venv/bin/python3 /home/orhunx/edgeshield/scripts/collector.py
+
+Haz 09 23:44:40 edgeshield systemd[1]: Started edgeshield-collector.service - EdgeShield MQTT Collector.
+
+● edgeshield-sim.service - EdgeShield Sensor Simulator
+     Loaded: loaded (/etc/systemd/system/edgeshield-sim.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:40 +03; 2min 19s ago
+ Invocation: 357612c76f0342fa8bf71f0ce4b3a489
+   Main PID: 1510 (python3)
+      Tasks: 2 (limit: 9621)
+        CPU: 173ms
+     CGroup: /system.slice/edgeshield-sim.service
+             └─1510 /home/orhunx/edgeshield/venv/bin/python3 /home/orhunx/edgeshield/scripts/sensor_sim.py
+
+Haz 09 23:44:40 edgeshield systemd[1]: Started edgeshield-sim.service - EdgeShield Sensor Simulator.
+
+● edgeshield-api.service - EdgeShield Flask API
+     Loaded: loaded (/etc/systemd/system/edgeshield-api.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:40 +03; 2min 19s ago
+ Invocation: e2993532773742479d24526681b0fb88
+   Main PID: 1509 (python3)
+      Tasks: 1 (limit: 9621)
+        CPU: 265ms
+     CGroup: /system.slice/edgeshield-api.service
+             └─1509 /home/orhunx/edgeshield/venv/bin/python3 /home/orhunx/edgeshield/scripts/api.py
+
+Haz 09 23:44:40 edgeshield systemd[1]: Started edgeshield-api.service - EdgeShield Flask API.
+Haz 09 23:44:44 edgeshield python3[1509]:  * Serving Flask app 'api'
+Haz 09 23:44:44 edgeshield python3[1509]:  * Debug mode: off
+Haz 09 23:44:44 edgeshield python3[1509]: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+Haz 09 23:44:44 edgeshield python3[1509]:  * Running on all addresses (0.0.0.0)
+Haz 09 23:44:44 edgeshield python3[1509]:  * Running on http://127.0.0.1:5000
+Haz 09 23:44:44 edgeshield python3[1509]:  * Running on http://192.168.1.115:5000
+Haz 09 23:44:44 edgeshield python3[1509]: Press CTRL+C to quit
+
+● edgeshield-anomaly.service - EdgeShield Anomaly Detector
+     Loaded: loaded (/etc/systemd/system/edgeshield-anomaly.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-09 23:44:40 +03; 2min 19s ago
+ Invocation: 1a44b9f8d6374cc0b12b6ca1f329f01b
+   Main PID: 1508 (python3)
+      Tasks: 7 (limit: 9621)
+        CPU: 3.148s
+     CGroup: /system.slice/edgeshield-anomaly.service
+             └─1508 /home/orhunx/edgeshield/venv/bin/python3 /home/orhunx/edgeshield/scripts/anomaly_detector.py
+
+Haz 09 23:44:40 edgeshield systemd[1]: Started edgeshield-anomaly.service - EdgeShield Anomaly Detector.

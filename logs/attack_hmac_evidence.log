@@ -1,0 +1,8 @@
+[*] HMAC TAMPERING ATTACK SIMULATION
+[*] Sending tampered payload (wrong MAC)...
+[!] Tampered packet 1 sent (value=99.9, fake MAC)
+[!] Tampered packet 2 sent (value=99.9, fake MAC)
+[!] Tampered packet 3 sent (value=99.9, fake MAC)
+[!] Tampered packet 4 sent (value=99.9, fake MAC)
+[!] Tampered packet 5 sent (value=99.9, fake MAC)
+[*] Done. Check logs for INTEGRITY_FAIL alerts.
