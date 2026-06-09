@@ -51,3 +51,6 @@ python3 scripts/api.py &
 
 ## License
 MIT
+
+## Demo Video
+https://youtu.be/U_uwpmIvv90?si=KQZWO4nHQ9xAwUVk
