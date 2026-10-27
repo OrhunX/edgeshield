@@ -11,3 +11,6 @@ __pycache__/
 *.csr
 *.srl
 influxdata-archive_compat.key
+
+# ortam dosyasi — sirlar
+.env

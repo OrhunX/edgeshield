@@ -1,11 +1,17 @@
+import os
 import paho.mqtt.client as mqtt
 import json, time, hmac, hashlib
 
-BROKER = "localhost"
-PORT = 1883
-USER = "edgeshield"
-PASS = "123"
-HMAC_KEY = b"edgeshield-secret-key-2026"
+# ── Yapılandırma ───────────────────────────────────────────────
+# Sırlar koda yazılmaz; ortam değişkeninden okunur. Örnek için .env.example
+BROKER    = os.environ.get("EDGESHIELD_BROKER", "localhost")
+PORT      = int(os.environ.get("EDGESHIELD_PORT", "1883"))
+USER      = os.environ.get("EDGESHIELD_USER", "edgeshield")
+PASS      = os.environ["EDGESHIELD_PASS"]
+HMAC_KEY  = os.environ["EDGESHIELD_HMAC_KEY"].encode()
+BASE      = os.environ.get("EDGESHIELD_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_FILE   = os.environ.get("EDGESHIELD_DB", os.path.join(BASE, "data", "edgeshield.db"))
+LOG_DIR   = os.environ.get("EDGESHIELD_LOGS", os.path.join(BASE, "logs"))
 
 def make_payload(device_id, value, fcnt):
     data = {

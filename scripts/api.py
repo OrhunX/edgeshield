@@ -2,7 +2,9 @@ from flask import Flask, jsonify
 import sqlite3, os
 
 app = Flask(__name__)
-DB_FILE = "/home/orhunx/edgeshield/data/edgeshield.db"
+BASE      = os.environ.get("EDGESHIELD_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_FILE   = os.environ.get("EDGESHIELD_DB", os.path.join(BASE, "data", "edgeshield.db"))
+LOG_DIR   = os.environ.get("EDGESHIELD_LOGS", os.path.join(BASE, "logs"))
 
 def query(sql, args=()):
     conn = sqlite3.connect(DB_FILE)

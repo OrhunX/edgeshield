@@ -1,10 +1,13 @@
+import os
 import sqlite3, time, json
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from datetime import datetime
 
-DB_FILE = "/home/orhunx/edgeshield/data/edgeshield.db"
-LOG_FILE = "/home/orhunx/edgeshield/logs/anomaly.log"
+BASE      = os.environ.get("EDGESHIELD_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_FILE   = os.environ.get("EDGESHIELD_DB", os.path.join(BASE, "data", "edgeshield.db"))
+LOG_DIR   = os.environ.get("EDGESHIELD_LOGS", os.path.join(BASE, "logs"))
+LOG_FILE = os.path.join(LOG_DIR, "anomaly.log")
 
 def log(msg):
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
